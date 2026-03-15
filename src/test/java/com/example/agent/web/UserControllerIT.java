@@ -16,6 +16,7 @@ class UserControllerIT {
 
     @Test
     void should_create_and_get_user() {
+        // 1) Create a user
         User created = web.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/users")
@@ -31,7 +32,9 @@ class UserControllerIT {
         assertThat(created).isNotNull();
         assertThat(created.id()).isNotBlank();
         assertThat(created.name()).isEqualTo("Alice");
+        assertThat(created.email()).isEqualTo("alice@example.com");
 
+        // 2) Retrieve the user by id
         User fetched = web.get()
                 .uri("/api/users/{id}", created.id())
                 .exchange()
@@ -42,5 +45,7 @@ class UserControllerIT {
 
         assertThat(fetched).isNotNull();
         assertThat(fetched.id()).isEqualTo(created.id());
+        assertThat(fetched.name()).isEqualTo("Alice");
+        assertThat(fetched.email()).isEqualTo("alice@example.com");
     }
 }

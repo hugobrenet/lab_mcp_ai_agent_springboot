@@ -15,28 +15,26 @@ public class GitHubMcpTools implements AgentTool {
     private final String owner;
     private final String repo;
 
-    public GitHubMcpTools(
-            McpHttpClient mcp,
-            @Value("${github.owner}") String owner,
-            @Value("${github.repo}") String repo
-    ) {
+    public GitHubMcpTools(McpHttpClient mcp,
+                          @Value("${github.owner}") String owner,
+                          @Value("${github.repo}") String repo) {
         this.mcp = mcp;
         this.owner = owner;
         this.repo = repo;
     }
 
-    @Tool("Create a GitHub issue in the configured repository. Use when the user asks to create a task/issue.")
+    @Tool("Create a GitHub issue in the configured repository")
     public String createIssue(
             @P("Issue title") String title,
             @P("Issue body in Markdown") String body
     ) {
-        Map result = (Map) mcp.callTool("create_issue", Map.of(
+        Map<String, Object> result = (Map<String, Object>) mcp.callTool("issue_write", Map.of(
+                "method", "create",
                 "owner", owner,
                 "repo", repo,
                 "title", title,
                 "body", body
         )).block();
-
         return "Issue created successfully: " + result;
     }
 }

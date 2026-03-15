@@ -1,11 +1,12 @@
 package com.example.agent.service;
 
-import com.example.agent.domain.User;
-import org.springframework.stereotype.Service;
-
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Service;
+
+import com.example.agent.domain.User;
 
 @Service
 public class UserService {

@@ -1,10 +1,11 @@
 package com.example.agent.web;
 
-import com.example.mcp.McpHttpClient;
+import com.example.agent.mcp.McpHttpClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -15,22 +16,23 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("ci")
 class AgentControllerIT {
 
-  @Autowired
-  WebTestClient web;
+    @Autowired
+    WebTestClient web;
 
-  @MockBean
-  McpHttpClient mcp;
+    @MockBean
+    McpHttpClient mcp;
 
-  @Test
-  void should_call_endpoint() {
-    when(mcp.callTool(eq("create_issue"), anyMap()))
-        .thenReturn(Mono.just(Map.of("number", 1, "html_url", "https://github.com/o/r/issues/1")));
+    @Test
+    void should_call_endpoint() {
+        when(mcp.callTool(eq("create_issue"), anyMap()))
+                .thenReturn(Mono.just(Map.of("number", 1, "html_url", "https://github.com/o/r/issues/1")));
 
-    web.post().uri("/api/run")
-        .bodyValue(Map.of("prompt", "Create a task to add OpenTelemetry"))
-        .exchange()
-        .expectStatus().isOk();
-  }
+        web.post().uri("/api/run")
+                .bodyValue("Create a task to add OpenTelemetry")
+                .exchange()
+                .expectStatus().isOk();
+    }
 }
